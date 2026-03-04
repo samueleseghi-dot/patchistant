@@ -159,8 +159,11 @@ function updateType() {
   const type = document.getElementById('type').value;
   const brand = document.getElementById('brand');
   const list = type === 'keyboard' ? KEYBOARDS : GUITARS;
+  const currentVal = brand.value;
   brand.innerHTML = '<option value="">– Seleziona –</option>' + list.map(b=>`<option>${b}</option>`).join('');
+  if (currentVal && list.includes(currentVal)) brand.value = currentVal;
 }
+updateType();
 
 function setFile(input) {
   if (input.files[0]) {
