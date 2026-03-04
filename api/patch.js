@@ -34,7 +34,7 @@ export default async function handler(req, res) {
 
     const data = await response.json();
     const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
-    if (!text) throw new Error('Risposta vuota');
+    if (!text) throw new Error('Risposta vuota. Dettaglio: ' + JSON.stringify(data));
     res.status(200).json({ text });
   } catch (error) {
     res.status(500).json({ error: error.message });
