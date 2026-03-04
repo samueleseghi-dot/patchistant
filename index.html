@@ -228,38 +228,16 @@ async function generate() {
   document.getElementById('result').classList.add('hidden');
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/patch', {
       method: 'POST',
       headers: {
-        'content-type': 'application/json',
-        'x-api-key': API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'content-type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1800,
-        messages: [{
-          role: 'user',
-          content: `Sei Patchistant, un esperto di sound design per strumenti musicali. Rispondi in italiano.
-
-Canzone: ${songInfo}
-Strumento: ${instrument} (${type})${notes ? '\nNote: ' + notes : ''}
-
-Crea una guida completa strutturata così:
-
-### Analisi del suono
-Caratteristiche sonore del suono originale.
-
-### Impostazioni passo-passo
-Guida dettagliata con valori precisi per ${instrument}.
-
-### Parametri chiave
-Lista dei valori principali.
-
-### Suggerimenti live
-Trucchi pratici per l'esecuzione dal vivo.`
-        }]
+        songInfo,
+        instrument,
+        notes,
+        type: document.getElementById('type').value === 'keyboard' ? 'tastiera' : 'processore chitarra'
       })
     });
 
