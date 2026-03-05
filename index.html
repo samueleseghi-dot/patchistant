@@ -18,6 +18,16 @@
   header h1 { font-family: 'Syne', sans-serif; font-size: 2.8rem; font-weight: 800; background: linear-gradient(135deg, #a78bfa, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   header p { color: var(--muted); margin-top: 10px; font-size: 1rem; }
 
+  /* Info button */
+  .info-wrapper { position: absolute; top: 0; left: 0; }
+  .info-toggle { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.85rem; padding: 7px 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; display: flex; align-items: center; gap: 6px; transition: border-color 0.2s; }
+  .info-toggle:hover { border-color: var(--accent2); }
+  .info-panel { display: none; position: absolute; top: calc(100% + 6px); left: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; z-index: 100; width: 300px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); padding: 18px; }
+  .info-panel.open { display: block; }
+  .info-panel p { font-size: 0.85rem; line-height: 1.7; color: #ccc8e8; margin-bottom: 10px; }
+  .info-panel p:last-child { margin-bottom: 0; }
+  .info-panel strong { color: var(--accent2); }
+
   /* Language dropdown */
   .lang-wrapper { position: absolute; top: 0; right: 0; }
   .lang-toggle { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.85rem; padding: 7px 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; display: flex; align-items: center; gap: 6px; transition: border-color 0.2s; }
@@ -63,6 +73,14 @@
 <body>
 <div class="container">
   <header>
+    <div class="info-wrapper">
+      <button class="info-toggle" onclick="toggleInfo()">ℹ️ about</button>
+      <div class="info-panel" id="info-panel">
+        <p><strong>what is patchistant?</strong><br>An AI tool that suggests keyboard patch settings to help you recreate sounds from songs you love.</p>
+        <p><strong>does it always work?</strong><br>Not perfectly. The AI knows sound design theory but doesn't know the exact menus and parameters of every keyboard model. Use the guides as a starting point, then tweak by ear.</p>
+        <p><strong>best results</strong><br>The more specific you are (brand, model, part of the song), the better the suggestions.</p>
+      </div>
+    </div>
     <div class="lang-wrapper">
       <button class="lang-toggle" id="lang-toggle" onclick="toggleMenu()">
         <span id="lang-current">🇮🇹 IT</span>
@@ -182,7 +200,18 @@ function buildMenu() {
   });
 }
 
+let infoOpen = false;
+
+function toggleInfo() {
+  infoOpen = !infoOpen;
+  document.getElementById('info-panel').classList.toggle('open', infoOpen);
+}
+
 document.addEventListener('click', e => {
+  if (infoOpen && !document.querySelector('.info-wrapper').contains(e.target)) {
+    infoOpen = false;
+    document.getElementById('info-panel').classList.remove('open');
+  }
   if (menuOpen && !document.querySelector('.lang-wrapper').contains(e.target)) {
     menuOpen = false;
     document.getElementById('lang-menu').classList.remove('open');
