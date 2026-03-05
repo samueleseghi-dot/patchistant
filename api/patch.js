@@ -3,11 +3,13 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { songInfo, instrument, notes, type } = req.body || {};
+  const { songInfo, instrument, notes, lang } = req.body || {};
 
   if (!songInfo || !instrument) {
-    return res.status(400).json({ error: 'Dati mancanti' });
+    return res.status(400).json({ error: 'Missing data' });
   }
+
+  const language = lang || 'italiano';
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -22,7 +24,24 @@ module.exports = async function handler(req, res) {
         max_tokens: 1800,
         messages: [{
           role: 'user',
-          content: `Sei Patchistant, un esperto di sound design. Rispondi in italiano.\n\nCanzone: ${songInfo}\nStrumento: ${instrument} (${type || ''})\n${notes ? 'Note: ' + notes : ''}\n\nCrea una guida completa con:\n\n### Analisi del suono\n### Impostazioni passo-passo\n### Parametri chiave\n### Suggerimenti live`
+          content: `You are Patchistant, a professional sound design expert for keyboards. Reply in ${language}.
+
+Song: ${songInfo}
+Keyboard: ${instrument}${notes ? '\nNotes: ' + notes : ''}
+
+Create a complete patch guide with these sections:
+
+### Sound Analysis
+Describe the sonic characteristics of the original sound.
+
+### Step-by-step Settings
+Detailed guide with precise values for ${instrument}.
+
+### Key Parameters
+Compact list of main values.
+
+### Live Tips
+Practical tips for live performance.`
         }]
       })
     });
